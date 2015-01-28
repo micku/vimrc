@@ -38,6 +38,7 @@ NeoBundleCheck
 " List of plugins
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'tpope/vim-surround'
+NeoBundle 'scrooloose/nerdtree'
 "  Web dev
 NeoBundle 'Shutnik/jshint2.vim'
 NeoBundle 'mattn/emmet-vim'
