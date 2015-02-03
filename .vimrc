@@ -39,6 +39,7 @@ NeoBundleCheck
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'tpope/vim-speeddating'
 "  Web dev
 NeoBundle 'Shutnik/jshint2.vim'
 NeoBundle 'mattn/emmet-vim'
