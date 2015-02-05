@@ -38,9 +38,10 @@ NeoBundleCheck
 " List of plugins
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'scrooloose/nerdtree'
+"NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'tpope/vim-speeddating'
-NeoBundle 'tpope/vinegar'
+NeoBundle 'tpope/vim-vinegar'
+NeoBundle 'terryma/vim-expand-region'
 "  Web dev
 NeoBundle 'Shutnik/jshint2.vim'
 NeoBundle 'mattn/emmet-vim'
@@ -124,10 +125,10 @@ let mapleader = ","
 " yank to and paste from the clipboard without prepending "* to commands
 let &clipboard = has('unnamedplus') ? 'unnamedplus' : 'unnamed'
 " map c-x and c-v to work as they do in windows, only in insert mode
-vm <c-x> "+x
-vm <c-c> "+y
-cno <c-v> <c-r>+
-exe 'ino <script> <C-V>' paste#paste_cmd['i']
+"vm <c-x> "+x
+"vm <c-c> "+y
+"cno <c-v> <c-r>+
+"exe 'ino <script> <C-V>' paste#paste_cmd['i']
 
 " keep the cursor visible within 3 lines when scrolling
 set scrolloff=3
@@ -143,8 +144,8 @@ set softtabstop=4   " in insert mode, tabs are 4 spaces
 if has("gui_running")
     set guioptions-=m  " remove menu bar
     set guioptions-=T  " remove toolbar
-    " set guioptions-=r  " remove right-hand scroll bar
-    " set guioptions-=L  " remove left-hand scroll bar
+    set guioptions-=r  " remove right-hand scroll bar
+    set guioptions-=L  " remove left-hand scroll bar
 end
 
 " set guifont=Menlo\ for\ Powerline:h14
@@ -195,3 +196,22 @@ set directory=$HOME/.vimfiles/temp//
 " use <leader-space> to remove search higlight
 nnoremap <leader><space> :noh<cr>
 
+" netrw configuration
+let g:netrw_liststyle = 3
+
+" Windows splitting
+set splitbelow
+set splitright
+
+nmap <silent> <C-k> <C-w>k
+nmap <silent> <C-j> <C-w>j
+nmap <silent> <C-l> <C-w>l
+nmap <silent> <C-h> <C-w>h
+nmap <silent> <C-tab> <C-w>w
+nmap <silent> <C-t><C-j> <C-w>s-
+nmap <silent> <C-t><C-k> <C-w>s-
+nmap <silent> <C-t><C-l> <C-w>v-
+nmap <silent> <C-t><C-s> <C-w>v-
+
+" vim-expand-region custom config
+vmap v <Plug>(expand_region_expand)
