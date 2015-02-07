@@ -161,6 +161,8 @@ end
 " set guifont=Ubuntu\ Mono\ derivative\ Powerline:h16
 " set guifont=mensch\ for\ Powerline:h8
 set guifont=Mensch:h8
+set guifont=Mensch\ 10
+set background=dark
 colorscheme solarized
 
 " search settings
