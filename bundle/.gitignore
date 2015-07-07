@@ -1,2 +1,3 @@
-.neobundle/*
-NeoBundle.lock
+*
+!.gitignore
+!README.md
