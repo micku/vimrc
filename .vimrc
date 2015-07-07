@@ -1,18 +1,17 @@
 " ---------------------- PRE START ----------------------
-
 " don't make vim compatible with vi 
-set nocompatible
+"set nocompatible
 " Note: Skip initialization for vim-tiny or vim-small.
 if !1 | finish | endif
 
 if has('vim_starting')
-	if &compatible
-		set nocompatible               " Be iMproved
-	endif
+    if &compatible
+        set nocompatible               " Be iMproved
+    endif
 
-	" Required:
-        set runtimepath+=$HOME/.vimfiles
-	set runtimepath+=$HOME/.vimfiles/bundle/neobundle.vim/
+    " Required:
+    set runtimepath+=~/.vimfiles
+    set runtimepath+=~/.vimfiles/bundle/neobundle.vim/
 endif
 
 " Required:
@@ -38,16 +37,21 @@ NeoBundleCheck
 " List of plugins
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-fugitive'
 "NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'tpope/vim-speeddating'
 NeoBundle 'tpope/vim-vinegar'
 NeoBundle 'terryma/vim-expand-region'
-"  Web dev
+NeoBundle 'christoomey/vim-tmux-navigator'
+" Auto save
+NeoBundle '907th/vim-auto-save'
+" Web dev
 NeoBundle 'Shutnik/jshint2.vim'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'groenewege/vim-less'
 NeoBundle 'skammer/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
+NeoBundle 'fatih/vim-go'
 
 " run JSHint when a file with .js extension is saved
 " this requires the jsHint2 plugin
@@ -55,15 +59,40 @@ autocmd BufWritePost *.js silent :JSHint
 
 " Enable lightline at startup
 set laststatus=2
-
 let g:lightline = {
-      \ 'colorscheme': 'wombat'
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ] ]
+      \ },
+      \ 'component_function': {
+      \   'fugitive': 'MyFugitive'
+      \ },
+      \ 'component': {
+      \   'readonly': '%{&filetype=="help"?"":&readonly?"\ue0a0":""}',
+      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}'
+      \ },
+      \ 'component_visible_condition': {
+      \   'readonly': '(&filetype!="help"&& &readonly)',
+      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))'
+      \ },
+      \ 'separator': { 'left': "\ue0b0", 'right': "\ue0b2" },
+      \ 'subseparator': { 'left': "\ue0b1", 'right': "\ue0b3" }
       \ }
-      " \ 'component': {
-      " \   'readonly': '%{&readonly?"":""}',
-      " \ },
-      " \ 'separator': { 'left': '', 'right': '' },
-      " \ 'subseparator': { 'left': '', 'right': '' }
+"let g:lightline = {
+      "\ 'colorscheme': 'wombat'
+      "\ 'component': {
+      "\   'readonly': '%{&readonly?"":""}',
+      "\ },
+      "\ 'separator': { 'left': '', 'right': '' },
+      "\ 'subseparator': { 'left': '', 'right': '' }
+      "\ }
+function! MyFugitive()
+        if &ft !~? 'vimfiler' && exists('*fugitive#head')
+                let _ = fugitive#head()
+                return strlen(_) ? '⎇ '._ : ''
+        endif
+        return ''
+endfunction
 set noshowmode
 
 " ---------------------- USABILITY CONFIGURATION ----------------------
@@ -124,6 +153,7 @@ let mapleader = ","
 " windows like clipboard
 " yank to and paste from the clipboard without prepending "* to commands
 let &clipboard = has('unnamedplus') ? 'unnamedplus' : 'unnamed'
+
 " map c-x and c-v to work as they do in windows, only in insert mode
 "vm <c-x> "+x
 "vm <c-c> "+y
@@ -148,21 +178,18 @@ if has("gui_running")
     set guioptions-=L  " remove left-hand scroll bar
 end
 
-" set guifont=Menlo\ for\ Powerline:h14
-" set guifont=Monaco\ for\ Powerline:h14
-" set guifont=Inconsolata\ for\ Powerline:h16
-" set guifont=Meslo\ LG\ L\ for\ Powerline:h9
-" set guifont=Inconsolata-dz\ for\ Powerline:h14
-" set guifont=Anonymous\ Pro\ for\ Powerline:h16
-" set guifont=Liberation\ Mono\ for\ Powerline:h14
-" set guifont=Meslo\ LG\ M\ DZ\ for\ Powerline:h14
-" set guifont=Source\ Code\ Pro\ for\ Powerline:h14
-" set guifont=DejaVu\ Sans\ Mono\ for\ Powerline:h8
-" set guifont=Ubuntu\ Mono\ derivative\ Powerline:h16
-" set guifont=mensch\ for\ Powerline:h8
 set guifont=Mensch:h8
 set guifont=Mensch\ 10
+if has("unix")
+  let s:uname = system("uname")
+  if s:uname == "Darwin\n"
+    set guifont=Meslo\ LG\ M\ DZ\ for\ Powerline:h11
+  endif
+endif
 set background=dark
+if has("gui_macvim")
+    set transparency=5
+end
 colorscheme solarized
 
 " search settings
@@ -186,6 +213,8 @@ autocmd BufNewFile,BufRead *.twig setlocal ft=html
 autocmd BufNewFile,BufRead *.less setlocal ft=less
 "   .jade files use jade syntax
 autocmd BufNewFile,BufRead *.jade setlocal ft=jade
+"   .go files are golang files
+autocmd BufNewFile,BufRead *.go setlocal ft=go
 
 " make undo persistant
 set undofile
@@ -217,3 +246,49 @@ nmap <silent> <C-t><C-s> <C-w>v-
 
 " vim-expand-region custom config
 vmap v <Plug>(expand_region_expand)
+
+" golang specific mappings
+au FileType go nmap <Leader>s <Plug>(go-implements)
+au FileType go nmap <Leader>i <Plug>(go-info)
+au FileType go nmap <Leader>gd <Plug>(go-doc)
+au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
+au FileType go nmap <leader>r <Plug>(go-run)
+au FileType go nmap <leader>b <Plug>(go-build)
+au FileType go nmap <leader>t <Plug>(go-test)
+au FileType go nmap <leader>c <Plug>(go-coverage)
+au FileType go nmap <Leader>ds <Plug>(go-def-split)
+au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+au FileType go nmap <Leader>dt <Plug>(go-def-tab)
+au FileType go nmap <Leader>e <Plug>(go-rename)
+
+" Does not work
+"au FileType go nmap <Leader>l :!gox -osarch="linux/amd64" -output="bin\{{.Dir}}_{{.OS}}_{{.Arch}}" ./...<cr>
+
+" Auto save
+let g:auto_save = 1
+let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
+
+" set the cursor to a vertical line in insert mode and a solid block
+" in command mode
+if exists('$TMUX')
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+
+    " upon hitting escape to change modes,
+    " send successive move-left and move-right
+    " commands to immediately redraw the cursor
+    inoremap <special> <Esc> <Esc>hl
+
+    " don't blink the cursor
+    set guicursor+=i:blinkwait0
+else
+    let &t_SI = "\<esc>\<esc>\<esc>]50;CursorShape=1\x7\<esc>\\"
+    let &t_EI = "\<esc>\<esc>\<esc>]50;CursorShape=0\x7\<esc>\\"
+endif
+
+" Panes resize
+nnoremap <silent> <Leader>s :resize -5<CR>
+nnoremap <silent> <Leader>w :resize +5<CR>
+nnoremap <silent> <Leader>d :vertical resize -5<CR>
+nnoremap <silent> <Leader>a :vertical resize +5<CR>
