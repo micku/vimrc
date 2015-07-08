@@ -11,13 +11,3 @@ From command line:
 
     git pull
     git submodule update
-
-## Adding a plugin
-From command line:
-
-    git submodule add https://repo-url bundle/repo-name
-    vim .vimrc # Add "NeoBundle 'user/repo'" in bundles list
-    git add .
-    git commit -m "Added plugin <plugin-name>"
-    git push origin master
-    cp .vimrc ~/.vimrc
