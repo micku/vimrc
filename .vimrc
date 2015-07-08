@@ -25,11 +25,6 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 " Refer to |:NeoBundle-examples|.
 " Note: You don't set neobundle setting in .gvimrc!
 
-call neobundle#end()
-
-" Required:
-filetype plugin indent on
-
 " If there are uninstalled bundles found on startup,
 " this will conveniently prompt you to install them.
 NeoBundleCheck
@@ -52,6 +47,11 @@ NeoBundle 'groenewege/vim-less'
 NeoBundle 'skammer/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'fatih/vim-go'
+
+call neobundle#end()
+
+" Required:
+filetype plugin indent on
 
 " run JSHint when a file with .js extension is saved
 " this requires the jsHint2 plugin
